@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrolling Line</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <div class="line-container">
+        <svg viewBox="0 0 450 2100" fill="none" preserveAspectRatio="xMidYMax meet">
+            <path d="M49.0534 -79C-90.5466 441.8 174.154 441.5 370.053 347C565.953 252.5 296.654 777.5 198.654 969.5C100.654 1161.5 192.308 1411.5 274.654 1577C357 1742.5 522.5 2013 250.154 1923C-22.1922 1833 110.654 2154 110.654 2154" stroke="#E82222" stroke-width="6"/>
+        </svg>  
+    </div>
+
+    <section class="one">
+        <h1 class="scroll" data-rate=".4" data-direction="vertical">some stuff</h1>
+    </section>
+
+    <section class="two">
+        <h1 class="scroll" data-rate=".2" data-direction="vertical">keep scrolling!</h1>
+        <p>watermark</p>
+    </section>
+
+    <script>
+
+        let path = document.querySelector('path')
+        let pathLength = path.getTotalLength()
+
+        path.style.strokeDasharray = pathLength + ' ' + pathLength;
+
+        path.style.strokeDashoffset = pathLength;
+
+        window.addEventListener('scroll', () => {
+
+            // what % down is it?
+            const scrollPercentage = (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+
+            // length to offset the dashes 
+            const drawLength = pathLength * scrollPercentage;
+
+            // draw in reverse 
+            path.style.strokeDashoffset = pathLength - drawLength;
+
+            const target = document.querySelectorAll('.scroll');
+
+            var index = 0, length = target.length;
+            for (index; index < length; index++) {
+                var pos = window.pageYOffset * target[index].dataset.rate;
+
+                if (target[index].dataset.direction === 'vertical') {
+                    target[index].style.transform = 'translate3d(0px, ' + pos + 'px, 0px)';
+                } else {
+                    var posX = window.pageYOffset * target[index].dataset.ratex;
+                    var posY = window.pageYOffset * target[index].dataset.ratey;
+
+                    target[index].style.transform = 'translate3d(' + posX + 'px, ' + posY + 'px, 0px)';
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
